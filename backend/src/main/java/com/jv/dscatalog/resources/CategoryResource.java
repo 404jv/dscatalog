@@ -1,6 +1,7 @@
 package com.jv.dscatalog.resources;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jv.dscatalog.dto.CategoryDTO;
 import com.jv.dscatalog.entities.Category;
 import com.jv.dscatalog.services.CategoryService;
 
@@ -19,8 +21,12 @@ public class CategoryResource {
 	private CategoryService service;
 	
 	@GetMapping()
-	public ResponseEntity<List<Category>> findAll() {
+	public ResponseEntity<List<CategoryDTO>> findAll() {
 		List<Category> list = service.findAll();
-		return ResponseEntity.ok().body(list);
+		List<CategoryDTO> listDto = list
+			.stream()
+			.map(x -> new CategoryDTO(x))
+			.collect(Collectors.toList()); 
+		return ResponseEntity.ok().body(listDto);
 	}
 }
